@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator X LO</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --accent: #b21f1f;
+            --gold: #fdbb2d;
+            --bg: #f4f7f6;
+            --text: #2c3e50;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; }
+        
+        .main-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        h1 { font-size: 1.3rem; text-align: center; color: var(--primary); margin: 0 0 5px 0; }
+        .subtitle { text-align: center; font-size: 0.8rem; color: #7f8c8d; margin-bottom: 20px; font-weight: bold; }
+
+        section { margin-bottom: 20px; padding: 15px; border-radius: 12px; background: #fafafa; border: 1px solid #eee; }
+        .sec-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 5px; }
+
+        .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+        .row label { flex: 1; font-size: 0.85rem; font-weight: 500; }
+        .hint { display: block; font-size: 0.7rem; color: #95a5a6; font-weight: normal; }
+
+        input { width: 75px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 1rem; background: white; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .btn-add { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
+        .btn-del { background: #fee; color: #c00; border: none; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: bold; min-width: 30px; }
+
+        .result-card { background: var(--primary); color: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(26,42,108,0.2); }
+        .grade-val { font-size: 2.5rem; font-weight: 900; color: var(--gold); margin: 5px 0; }
+        .perc-val { font-size: 1.2rem; font-weight: 600; opacity: 0.9; }
+        .limit-info { font-size: 0.7rem; margin-top: 10px; color: #bdc3c7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-card">
+        <h1>📊 Kalkulator Punktowy</h1>
+        <div class="subtitle">X LO im. Królowej Jadwigi</div>
+
+        <section>
+            <div class="sec-title">📝 Sprawdziany (Baza)</div>
+            <div id="test-list">
+                <div class="row">
+                    <label>Sprawdzian 1 <span class="hint">Zakres: 0 do 25 pkt</span></label>
+                    <input type="number" class="t-score" placeholder="" oninput="vR(this, 0, 25); calc()">
+                    <button class="btn-del" onclick="this.parentElement.remove(); renumber('test-list', 'Sprawdzian', '0 do 25 pkt'); calc()">X</button>
+                </div>
+            </div>
+            <button class="btn-add" onclick="addItem('test-list', 't-score', 'Sprawdzian', 0, 25)">+ Dodaj kolejny sprawdzian</button>
+        </section>
+
+        <section>
+            <div class="sec-title">📑 Kartkówki (Dodatkowe)</div>
+            <div id="quiz-list">
+                <div class="row">
+                    <label>Kartkówka 1 <span class="hint">Zakres: -2 do 4 pkt</span></label>
+                    <input type="number" class="q-score" placeholder="" oninput="vR(this, -2, 4); calc()">
+                    <button class="btn-del" onclick="this.parentElement.remove(); renumber('quiz-list', 'Kartkówka', '-2 do 4 pkt'); calc()">X</button>
+                </div>
+            </div>
+            <button class="btn-add" style="background: #3498db;" onclick="addItem('quiz-list', 'q-score', 'Kartkówka', -2, 4)">+ Dodaj kolejną kartkówkę</button>
+        </section>
+
+        <section>
+            <div class="sec-title">🏫 Aktywność i zadania</div>
+            <div class="row">
+                <label>Odpowiedź ustna <span class="hint">Zakres: -2 do 2 pkt</span></label>
+                <input type="number" id="oral" placeholder="" oninput="vR(this, -2, 2); calc()">
+            </div>
+            <div class="row">
+                <label>Praca na lekcji <span class="hint">Zakres: -2 do 2 pkt</span></label>
+                <input type="number" id="lesson" placeholder="" oninput="vR(this, -2, 2); calc()">
+            </div>
+            <div class="row">
+                <label>Zadanie dodatkowe na lekcji <span class="hint">Zakres: 0 do 4 pkt</span></label>
+                <input type="number" id="extra-lesson" placeholder="" oninput="vR(this, 0, 4); calc()">
+            </div>
+            <div class="row">
+                <label>Zadania dodatkowe domowe <span class="hint">Zakres: 0 do 2 pkt</span></label>
+                <input type="number" id="extra-home" placeholder="" oninput="vR(this, 0, 2); calc()">
+            </div>
+        </section>
+
+        <section>
+            <div class="sec-title">📅 Sprawdziany okresowe</div>
+            <div class="row">
+                <label>Diagnoza po SP <span class="hint">Zakres: 0 do 4 pkt</span></label>
+                <input type="number" id="diag" placeholder="" oninput="vR(this, 0, 4); calc()">
+            </div>
+            <div class="row">
+                <label>Sprawdzian semestralny <span class="hint">Zakres: 0 do 5 pkt</span></label>
+                <input type="number" id="sem-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
+            </div>
+            <div class="row">
+                <label>Sprawdzian roczny <span class="hint">Zakres: 0 do 5 pkt</span></label>
+                <input type="number" id="ann-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
+            </div>
+        </section>
+
+        <section>
+            <div class="sec-title">🏆 Poprawy i nieprzygotowania</div>
+            <div class="row">
+                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 2 lub 4 pkt</span></label>
+                <input type="number" id="poprawy-pts" placeholder="" onchange="vPop(this); calc()">
+            </div>
+            <div class="row">
+                <label>Przekroczony limit nieprzygotowań <span class="hint">Wartość: -1 pkt za każde</span></label>
+                <input type="number" id="np-penalty" placeholder="" oninput="vR(this, -2, 0); calc()">
+            </div>
+        </section>
+    </div>
+
+    <div class="result-card">
+        <div id="grade-label" class="grade-val">-</div>
+        <div id="perc-label" class="perc-val">0.0%</div>
+        <div id="limit-msg" class="limit-info">Dodaj sprawdzian, aby obliczyć wynik</div>
+    </div>
+</div>
+
+<script>
+    // Walidacja zakresów
+    function vR(el, min, max) {
+        let val = parseFloat(el.value);
+        if (el.value !== "" && val > max) el.value = max;
+        if (el.value !== "" && val < min) el.value = min;
+    }
+
+    // Walidacja specyficzna dla popraw
+    function vPop(el) {
+        if (el.value !== "") {
+            let val = parseInt(el.value);
+            const allowed = [0, 2, 4];
+            if (!allowed.includes(val)) {
+                if (val > 4) el.value = 4;
+                else if (val > 1) el.value = 2;
+                else el.value = 0;
+            }
+        }
+    }
+
+    function addItem(listId, cls, labelBase, min, max) {
+        const list = document.getElementById(listId);
+        const count = list.children.length + 1;
+        const div = document.createElement('div');
+        div.className = 'row';
+        div.innerHTML = `
+            <label>${labelBase} ${count} <span class="hint">Zakres: ${min} do ${max} pkt</span></label>
+            <input type="number" class="${cls}" placeholder="" oninput="vR(this, ${min}, ${max}); calc()">
+            <button class="btn-del" onclick="this.parentElement.remove(); renumber('${listId}', '${labelBase}', '${min} do ${max} pkt'); calc()">X</button>
+        `;
+        list.appendChild(div);
+        calc();
+    }
+
+    function renumber(listId, labelBase, hintText) {
+        const rows = document.getElementById(listId).getElementsByClassName('row');
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].querySelector('label').innerHTML = `${labelBase} ${i + 1} <span class="hint">Zakres: ${hintText}</span>`;
+        }
+    }
+
+    function calc() {
+        // BAZA
+        let bS = 0, bM = 0;
+        const tests = document.getElementsByClassName('t-score');
+        for (let t of tests) { bS += parseFloat(t.value) || 0; bM += 25; }
+        
+        // DODATKOWE
+        let ex = 0;
+        const quizzes = document.getElementsByClassName('q-score');
+        for (let q of quizzes) ex += parseFloat(q.value) || 0;
+
+        ex += parseFloat(document.getElementById('oral').value) || 0;
+        ex += parseFloat(document.getElementById('lesson').value) || 0;
+        ex += parseFloat(document.getElementById('extra-lesson').value) || 0;
+        ex += parseFloat(document.getElementById('extra-home').value) || 0;
+        ex += parseFloat(document.getElementById('diag').value) || 0;
+        ex += parseFloat(document.getElementById('sem-exam').value) || 0;
+        ex += parseFloat(document.getElementById('ann-exam').value) || 0;
+        ex += parseFloat(document.getElementById('poprawy-pts').value) || 0;
+        ex += parseFloat(document.getElementById('np-penalty').value) || 0;
+
+        const lim = bM * 0.2;
+        const vEx = Math.min(ex, lim);
+        let p = bM > 0 ? ((bS + vEx) / bM) * 100 : 0;
+
+        let g = "-";
+        if (bM > 0) {
+            if (p >= 100) g = "6 (Celujący)";
+            else if (p >= 95) g = "5 (Bardzo dobry)";
+            else if (p >= 80) g = "4 (Dobry)";
+            else if (p >= 60) g = "3 (Dostateczny)";
+            else if (p >= 50) g = "2 (Dopuszczający)";
+            else g = "1 (Niedostateczny)";
+        }
+
+        document.getElementById('grade-label').innerText = g;
+        document.getElementById('perc-label').innerText = p.toFixed(1) + "%";
+        <!-- document.getElementById('limit-msg').innerText = bM === 0 ? "Brak bazy punktowej" : `Dodatkowe: ${ex.toFixed(1)} / ${lim.toFixed(1)} pkt (Limit 20%)`; -->
+    }
+</script>
+</body>
+</html>

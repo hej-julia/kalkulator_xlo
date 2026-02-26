@@ -216,8 +216,6 @@
 
         document.getElementById('grade-label').innerText = g;
         document.getElementById('perc-label').innerText = p.toFixed(1) + "%";
-        
-        // Zmiana: Wyświetlanie bez zbędnych zer po przecinku (36 zamiast 36.0)
         document.getElementById('fraction-label').innerText = `Punkty: ${Number(currentTotal.toFixed(1))} / ${bM}`;
         
         const msg = document.getElementById('limit-msg');

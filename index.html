@@ -22,7 +22,6 @@
         h1 { font-size: 1.3rem; text-align: center; color: var(--primary); margin: 0 0 5px 0; }
         .subtitle { text-align: center; font-size: 0.8rem; color: #7f8c8d; margin-bottom: 10px; font-weight: bold; }
 
-        /* Styl dla instrukcji */
         .instructions-toggle {
             background: none;
             border: 1px solid var(--primary);
@@ -65,26 +64,26 @@
         .result-card { background: var(--primary); color: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(26,42,108,0.2); }
         .grade-val { font-size: 2.2rem; font-weight: 900; color: var(--gold); margin: 5px 0; }
         .perc-val { font-size: 1.2rem; font-weight: 600; opacity: 0.9; }
-        .limit-info { font-size: 0.7rem; margin-top: 10px; color: #bdc3c7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+        .fraction-val { font-size: 1.1rem; margin-top: 5px; font-weight: bold; color: #ecf0f1; border-top: 1px solid rgba(255,255,255,0.2); display: inline-block; padding-top: 5px; }
+        .limit-info { font-size: 0.7rem; margin-top: 10px; color: #bdc3c7; opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="main-card">
-        <h1>📊Kalkulator oceny końcowej z matematyki</h1>
+        <h1>📊 Kalkulator oceny końcowej</h1>
         <div class="subtitle">X LO im. Królowej Jadwigi</div>
 
         <button class="instructions-toggle" onclick="toggleInstructions()">❓ Jak używać kalkulatora?</button>
         <div id="instructions-content">
-            <ul style="padding-left: 20px; margin: 5px 0;">
-                Aby obliczyć aktualną ocenę końcową z matematyki należy wpisać wszystkie punkty, jakie do tej pory uzyskano z obu semestrów.
-                Można także zrobić sobie symulację, ile trzeba dostać punktów z następnych sprawdzianów, aby otrzymać konkretną ocenę na koniec z matematyki.
-                <li><strong>Sprawdziany:</strong> Tworzą bazę (25 pkt każdy), wpisz liczbę punktów jaką uzyskano za każdy sprawdzian.</li>
-                <li><strong>Dodatkowe:</strong> Kartkówki, aktywność itp. to punkty bonusowe, które podnoszą wynik.</li>
-                <li><strong>Limit 20%:</strong> Punkty dodatkowe mogą podnieść wynik o max 20% wartości bazy sprawdzianowej.</li>
-                <li><strong>Poprawy:</strong> Wpisz 2 lub 4 pkt, jeśli nie wykorzystano jednej lub dwóch popraw.</li>
-                <li><strong>NP:</strong> Każde nieprzygotowanie powyżej limitu to -1 pkt.</li>
+            Aby obliczyć aktualną ocenę końcową z matematyki należy wpisać wszystkie punkty, jakie do tej pory uzyskano z obu semestrów.
+            <ul style="padding-left: 20px; margin: 10px 0;">
+                <li><strong>Sprawdziany:</strong> Tworzą bazę (25 pkt każdy).</li>
+                <li><strong>Dodatkowe:</strong> Kartkówki, aktywność itp. podnoszą wynik.</li>
+                <li><strong>Limit 20%:</strong> Bonusy max 20% wartości bazy.</li>
+                <li><strong>Poprawy:</strong> 2 lub 4 pkt za niewykorzystane poprawy.</li>
+                <li><strong>NP:</strong> Każde NP powyżej limitu to -1 pkt.</li>
             </ul>
             <div style="font-size: 0.8rem; color: #9f0909; margin-top: 8px; border-top: 1px solid #ccc; padding-top: 5px;">
                 <strong>Progi:</strong> 50% (2), 60% (3), 80% (4), 95% (5), 100% (6)
@@ -117,57 +116,31 @@
 
         <section>
             <div class="sec-title">🏫 Aktywność i zadania</div>
-            <div class="row">
-                <label>Odpowiedź ustna <span class="hint">Zakres: -2 do 2 pkt</span></label>
-                <input type="number" id="oral" placeholder="" oninput="vR(this, -2, 2); calc()">
-            </div>
-            <div class="row">
-                <label>Praca na lekcji <span class="hint">Zakres: -2 do 2 pkt</span></label>
-                <input type="number" id="lesson" placeholder="" oninput="vR(this, -2, 2); calc()">
-            </div>
-            <div class="row">
-                <label>Zadanie dodatkowe na lekcji <span class="hint">Zakres: 0 do 4 pkt</span></label>
-                <input type="number" id="extra-lesson" placeholder="" oninput="vR(this, 0, 4); calc()">
-            </div>
-            <div class="row">
-                <label>Zadanie dodatkowe domowe <span class="hint">Zakres: 0 do 2 pkt</span></label>
-                <input type="number" id="extra-home" placeholder="" oninput="vR(this, 0, 2); calc()">
-            </div>
+            <div class="row"><label>Odpowiedź ustna <span class="hint">-2 do 2 pkt</span></label><input type="number" id="oral" oninput="vR(this, -2, 2); calc()"></div>
+            <div class="row"><label>Praca na lekcji <span class="hint">-2 do 2 pkt</span></label><input type="number" id="lesson" oninput="vR(this, -2, 2); calc()"></div>
+            <div class="row"><label>Zadanie dodatkowe <span class="hint">0 do 4 pkt</span></label><input type="number" id="extra-lesson" oninput="vR(this, 0, 4); calc()"></div>
+            <div class="row"><label>Zadanie domowe <span class="hint">0 do 2 pkt</span></label><input type="number" id="extra-home" oninput="vR(this, 0, 2); calc()"></div>
         </section>
 
         <section>
             <div class="sec-title">📅 Sprawdziany okresowe</div>
-            <div class="row">
-                <label>Diagnoza po SP <span class="hint">Zakres: 0 do 4 pkt</span></label>
-                <input type="number" id="diag" placeholder="" oninput="vR(this, 0, 4); calc()">
-            </div>
-            <div class="row">
-                <label>Sprawdzian semestralny <span class="hint">Zakres: 0 do 5 pkt</span></label>
-                <input type="number" id="sem-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
-            </div>
-            <div class="row">
-                <label>Sprawdzian roczny <span class="hint">Zakres: 0 do 5 pkt</span></label>
-                <input type="number" id="ann-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
-            </div>
+            <div class="row"><label>Diagnoza <span class="hint">0 do 4 pkt</span></label><input type="number" id="diag" oninput="vR(this, 0, 4); calc()"></div>
+            <div class="row"><label>Semestralny <span class="hint">0 do 5 pkt</span></label><input type="number" id="sem-exam" oninput="vR(this, 0, 5); calc()"></div>
+            <div class="row"><label>Roczny <span class="hint">0 do 5 pkt</span></label><input type="number" id="ann-exam" oninput="vR(this, 0, 5); calc()"></div>
         </section>
 
         <section>
-            <div class="sec-title">🏆 Poprawy i nieprzygotowania</div>
-            <div class="row">
-                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 2 lub 4 pkt</span></label>
-                <input type="number" id="poprawy-pts" placeholder="" onchange="vPop(this); calc()">
-            </div>
-            <div class="row">
-                <label>Przekroczony limit NP <span class="hint">Wartość: -1 pkt za każde</span></label>
-                <input type="number" id="np-penalty" placeholder="" oninput="vR(this, -5, 0); calc()">
-            </div>
+            <div class="sec-title">🏆 Poprawy i NP</div>
+            <div class="row"><label>Poprawy <span class="hint">0, 2 lub 4 pkt</span></label><input type="number" id="poprawy-pts" onchange="vPop(this); calc()"></div>
+            <div class="row"><label>Przekroczone NP <span class="hint">-1 za każde</span></label><input type="number" id="np-penalty" oninput="vR(this, -10, 0); calc()"></div>
         </section>
     </div>
 
     <div class="result-card">
         <div id="grade-label" class="grade-val">-</div>
         <div id="perc-label" class="perc-val">0.0%</div>
-        <div id="limit-msg" class="limit-info">Dodaj uzyskane punkty, aby obliczyć ocenę końcową</div>
+        <div id="fraction-label" class="fraction-val">Punkty: 0 / 0</div>
+        <div id="limit-msg" class="limit-info">Dodaj uzyskane punkty</div>
     </div>
 </div>
 
@@ -184,15 +157,8 @@
     }
 
     function vPop(el) {
-        if (el.value !== "") {
-            let val = parseInt(el.value);
-            const allowed = [0, 2, 4];
-            if (!allowed.includes(val)) {
-                if (val > 4) el.value = 4;
-                else if (val > 1) el.value = 2;
-                else el.value = 0;
-            }
-        }
+        let val = parseInt(el.value) || 0;
+        if (![0, 2, 4].includes(val)) el.value = val > 3 ? 4 : (val > 0 ? 2 : 0);
     }
 
     function addItem(listId, cls, labelBase, min, max) {
@@ -200,11 +166,9 @@
         const count = list.children.length + 1;
         const div = document.createElement('div');
         div.className = 'row';
-        div.innerHTML = `
-            <label>${labelBase} ${count} <span class="hint">Zakres: ${min} do ${max} pkt</span></label>
-            <input type="number" class="${cls}" placeholder="" oninput="vR(this, ${min}, ${max}); calc()">
-            <button class="btn-del" onclick="this.parentElement.remove(); renumber('${listId}', '${labelBase}', '${min} do ${max} pkt'); calc()">X</button>
-        `;
+        div.innerHTML = `<label>${labelBase} ${count} <span class="hint">${min}-${max} pkt</span></label>
+            <input type="number" class="${cls}" oninput="vR(this, ${min}, ${max}); calc()">
+            <button class="btn-del" onclick="this.parentElement.remove(); renumber('${listId}', '${labelBase}', '${min}-${max} pkt'); calc()">X</button>`;
         list.appendChild(div);
         calc();
     }
@@ -212,7 +176,7 @@
     function renumber(listId, labelBase, hintText) {
         const rows = document.getElementById(listId).getElementsByClassName('row');
         for (let i = 0; i < rows.length; i++) {
-            rows[i].querySelector('label').innerHTML = `${labelBase} ${i + 1} <span class="hint">Zakres: ${hintText}</span>`;
+            rows[i].querySelector('label').innerHTML = `${labelBase} ${i + 1} <span class="hint">${hintText}</span>`;
         }
     }
 
@@ -237,7 +201,8 @@
 
         const lim = bM * 0.2;
         const vEx = Math.min(ex, lim);
-        let p = bM > 0 ? ((bS + vEx) / bM) * 100 : 0;
+        let currentTotal = bS + vEx;
+        let p = bM > 0 ? (currentTotal / bM) * 100 : 0;
 
         let g = "-";
         if (bM > 0) {
@@ -251,8 +216,14 @@
 
         document.getElementById('grade-label').innerText = g;
         document.getElementById('perc-label').innerText = p.toFixed(1) + "%";
-        document.getElementById('fraction-label').innerText = `Punkty: ${currentTotal.toFixed(1)} / ${bM}`;
-        <!--document.getElementById('limit-msg').innerText = bM === 0 ? "Brak bazy punktowej" : `Dodatkowo: ${ex.toFixed(1)} pkt (Uznano: ${vEx.toFixed(1)} / Max bonus: ${lim.toFixed(1)})`; -->
+        
+        // Zmiana: Wyświetlanie bez zbędnych zer po przecinku (36 zamiast 36.0)
+        document.getElementById('fraction-label').innerText = `Punkty: ${Number(currentTotal.toFixed(1))} / ${bM}`;
+        
+        const msg = document.getElementById('limit-msg');
+        if (bM === 0) msg.innerText = "Dodaj sprawdzian (bazę)";
+        else if (ex > lim) msg.innerText = `Osiągnięto limit bonusu (+${lim.toFixed(1)} pkt)`;
+        else msg.innerText = "Bonusy wliczone w wynik";
     }
 </script>
 </body>

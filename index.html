@@ -97,12 +97,12 @@
             <div class="sec-title">📝 Sprawdziany (Baza)</div>
             <div id="test-list">
                 <div class="row">
-                    <label>Sprawdzian 1 <span class="hint">0-25 pkt</span></label>
+                    <label>Sprawdzian 1 <span class="hint">Zakres: 0 do 25 pkt</span></label>
                     <input type="number" class="t-score" oninput="vR(this, 0, 25); calc()">
-                    <button class="btn-del" onclick="this.parentElement.remove(); renumber('test-list', 'Sprawdzian', '0-25 pkt'); calc()">X</button>
+                    <button class="btn-del" onclick="this.parentElement.remove(); renumber('test-list', 'Sprawdzian', '0 do 25 pkt'); calc()">X</button>
                 </div>
             </div>
-            <button class="btn-add" onclick="addItem('test-list', 't-score', 'Sprawdzian', 0, 25)">+ Dodaj kolejny sprawdzian</button>
+            <button class="btn-add" onclick="addItem('test-list', 't-score', 'Sprawdzian', '0 do 25 pkt')">+ Dodaj kolejny sprawdzian</button>
         </section>
 
         <section>
@@ -114,7 +114,7 @@
                     <button class="btn-del" onclick="this.parentElement.remove(); renumber('quiz-list', 'Kartkówka', '-2 do 4 pkt'); calc()">X</button>
                 </div>
             </div>
-            <button class="btn-add" style="background: #3498db;" onclick="addItem('quiz-list', 'q-score', 'Kartkówka', -2, 4)">+ Dodaj kolejną kartkówkę</button>
+            <button class="btn-add" style="background: #3498db;" onclick="addItem('quiz-list', 'q-score', 'Kartkówka', '-2 do 4 pkt')">+ Dodaj kolejną kartkówkę</button>
         </section>
 
         <section>

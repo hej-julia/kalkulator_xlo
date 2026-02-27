@@ -80,16 +80,16 @@
         <button class="instructions-toggle" onclick="toggleInstructions()">❓ Jak używać kalkulatora?</button>
         <div id="instructions-content">
             Aby obliczyć aktualną ocenę końcową z matematyki należy wpisać wszystkie punkty, jakie do tej pory uzyskano z obu semestrów.
-                Można także zrobić sobie symulację, ile trzeba dostać z następnych sprawdzianów, aby otrzymać konkretną ocenę na koniec z matematyki.
+                Można także zrobić symulację, ile trzeba dostać punktów z następnych sprawdzianów, aby otrzymać konkretną ocenę na koniec z matematyki.
                 <li><strong>Sprawdziany:</strong> Tworzą bazę (25 pkt każdy), wpisz liczbę punktów jaką uzyskano za każdy sprawdzian.</li>
                 <li><strong>Dodatkowe:</strong> Kartkówki, aktywność itp. to punkty dodatkowe, niewliczane do puli w mianowniku.</li>
                 <li><strong>Limit 20%:</strong> Punkty dodatkowe mogą podnieść wynik o max 20% wartości bazy sprawdzianowej.</li>
-                <li><strong>Poprawy:</strong> Wpisz 2, 4, 6 lub 8 pkt za niewykorzystane poprawy.</li>
+                <li><strong>Poprawy:</strong> Wpisz 2, 4, 6 lub 8 pkt za niewykorzystane poprawy lub 0 jeśli wykorzystano wszystko poprawy.</li>
                 <li><strong>NP:</strong> Każde nieprzygotowanie powyżej limitu to -1 pkt.</li>
 
             </ul>
             <div style="font-size: 0.75rem; color: #666; border-top: 1px solid #ccc; pt: 5px;">
-        Progi: 50%(2), 60%(3), 80%(4), 95%(5), 100%(6)
+        Progi: 50% (2), 60% (3), 80% (4), 95% (5), 100% (6)
     </div>
         </div>
 
@@ -106,7 +106,7 @@
         </section>
 
         <section>
-            <div class="sec-title">📑 Kartkówki i Inne</div>
+            <div class="sec-title">📑 Kartkówki</div>
             <div id="quiz-list">
                 <div class="row">
                     <label>Kartkówka 1 <span class="hint">-2 do 4 pkt</span></label>
@@ -118,21 +118,51 @@
         </section>
 
         <section>
-            <div class="sec-title">🏫 Aktywność i Zadania</div>
-            <div class="row"><label>Odpowiedź / Lekcja <span class="hint">-2 do 2 pkt</span></label><input type="number" id="oral" oninput="vR(this, -2, 2); calc()"></div>
-            <div class="row"><label>Zadania dodatkowe <span class="hint">0 do 4 pkt</span></label><input type="number" id="extra-pts" oninput="vR(this, 0, 4); calc()"></div>
+            <div class="sec-title">🏫 Aktywność i zadania</div>
+            <div class="row">
+                <label>Odpowiedź ustna <span class="hint">Zakres: -2 do 2 pkt</span></label>
+                <input type="number" id="oral" placeholder="" oninput="vR(this, -2, 2); calc()">
+            </div>
+            <div class="row">
+                <label>Praca na lekcji <span class="hint">Zakres: -2 do 2 pkt</span></label>
+                <input type="number" id="lesson" placeholder="" oninput="vR(this, -2, 2); calc()">
+            </div>
+            <div class="row">
+                <label>Zadanie dodatkowe na lekcji <span class="hint">Zakres: 0 do 2 pkt</span></label>
+                <input type="number" id="extra-lesson" placeholder="" oninput="vR(this, 0, 4); calc()">
+            </div>
+            <div class="row">
+                <label>Zadanie dodatkowe domowe <span class="hint">Zakres: 0 do 2 pkt</span></label>
+                <input type="number" id="extra-home" placeholder="" oninput="vR(this, 0, 2); calc()">
+            </div>
         </section>
 
         <section>
-            <div class="sec-title">📅 Egzaminy Okresowe</div>
-            <div class="row"><label>Diagnoza <span class="hint">0-4 pkt</span></label><input type="number" id="diag" oninput="vR(this, 0, 4); calc()"></div>
-            <div class="row"><label>Semestralny / Roczny <span class="hint">0-5 pkt</span></label><input type="number" id="exams" oninput="vR(this, 0, 5); calc()"></div>
+            <div class="sec-title">📅 Sprawdziany okresowe</div>
+            <div class="row">
+                <label>Diagnoza po SP <span class="hint">Zakres: 0 do 4 pkt</span></label>
+                <input type="number" id="diag" placeholder="" oninput="vR(this, 0, 4); calc()">
+            </div>
+            <div class="row">
+                <label>Sprawdzian semestralny <span class="hint">Zakres: 0 do 5 pkt</span></label>
+                <input type="number" id="sem-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
+            </div>
+            <div class="row">
+                <label>Sprawdzian roczny <span class="hint">Zakres: 0 do 5 pkt</span></label>
+                <input type="number" id="ann-exam" placeholder="" oninput="vR(this, 0, 5); calc()">
+            </div>
         </section>
 
         <section>
-            <div class="sec-title">🏆 Poprawy i NP</div>
-            <div class="row"><label>Poprawy <span class="hint">0, 2, 4, 6 lub 8 pkt</span></label><input type="number" id="poprawy-pts" onchange="vPop(this); calc()"></div>
-            <div class="row"><label>NP powyżej limitu <span class="hint">-1 za każde</span></label><input type="number" id="np-penalty" oninput="vR(this, -10, 0); calc()"></div>
+            <div class="sec-title">🏆 Poprawy i nieprzygotowania</div>
+            <div class="row">
+                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 2 lub 4 pkt</span></label>
+                <input type="number" id="poprawy-pts" placeholder="" onchange="vPop(this); calc()">
+            </div>
+            <div class="row">
+                <label>Przekroczony limit NP <span class="hint">Wartość: -1 pkt za każde</span></label>
+                <input type="number" id="np-penalty" placeholder="" oninput="vR(this, -5, 0); calc()">
+            </div>
         </section>
     </div>
 

@@ -82,7 +82,7 @@
                 <li><strong>Sprawdziany:</strong> Tworzą bazę (25 pkt każdy).</li>
                 <li><strong>Dodatkowe:</strong> Kartkówki, aktywność itp. podnoszą wynik.</li>
                 <li><strong>Limit 20%:</strong> Bonusy max 20% wartości bazy.</li>
-                <li><strong>Poprawy:</strong> 2 lub 4 pkt za niewykorzystane poprawy.</li>
+                <li><strong>Poprawy:</strong> Do 8 pkt za niewykorzystane poprawy (max 4 w roku).</li>
                 <li><strong>NP:</strong> Każde NP powyżej limitu to -1 pkt.</li>
             </ul>
             <div style="font-size: 0.8rem; color: #9f0909; margin-top: 8px; border-top: 1px solid #ccc; padding-top: 5px;">
@@ -124,15 +124,21 @@
 
         <section>
             <div class="sec-title">📅 Sprawdziany okresowe</div>
-            <div class="row"><label>Diagnoza <span class="hint">0 do 4 pkt</span></label><input type="number" id="diag" oninput="vR(this, 0, 4); calc()"></div>
+            <div class="row"><label>Diagnoza po SP <span class="hint">0 do 4 pkt</span></label><input type="number" id="diag" oninput="vR(this, 0, 4); calc()"></div>
             <div class="row"><label>Semestralny <span class="hint">0 do 5 pkt</span></label><input type="number" id="sem-exam" oninput="vR(this, 0, 5); calc()"></div>
             <div class="row"><label>Roczny <span class="hint">0 do 5 pkt</span></label><input type="number" id="ann-exam" oninput="vR(this, 0, 5); calc()"></div>
         </section>
 
         <section>
             <div class="sec-title">🏆 Poprawy i NP</div>
-            <div class="row"><label>Poprawy <span class="hint">0, 2 lub 4 pkt</span></label><input type="number" id="poprawy-pts" onchange="vPop(this); calc()"></div>
-            <div class="row"><label>Przekroczone NP <span class="hint">-1 za każde</span></label><input type="number" id="np-penalty" oninput="vR(this, -10, 0); calc()"></div>
+            <div class="row">
+                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 2, 4, 6 lub 8 pkt</span></label>
+                <input type="number" id="poprawy-pts" placeholder="" onchange="vPop(this); calc()">
+            </div>
+            <div class="row">
+                <label>Przekroczony limit NP <span class="hint">-1 za każde powyżej limitu</span></label>
+                <input type="number" id="np-penalty" oninput="vR(this, -10, 0); calc()">
+            </div>
         </section>
     </div>
 
@@ -156,9 +162,20 @@
         if (el.value !== "" && val < min) el.value = min;
     }
 
+    // ZAKTUALIZOWANA FUNKCJA DLA POPRAW (0-8)
     function vPop(el) {
-        let val = parseInt(el.value) || 0;
-        if (![0, 2, 4].includes(val)) el.value = val > 3 ? 4 : (val > 0 ? 2 : 0);
+        if (el.value !== "") {
+            let val = parseInt(el.value);
+            const allowed = [0, 2, 4, 6, 8];
+            if (!allowed.includes(val)) {
+                if (val > 8) el.value = 8;
+                else if (val < 0) el.value = 0;
+                else {
+                    // Zaokrąglanie do najbliższej parzystej w zakresie 0-8
+                    el.value = Math.round(val / 2) * 2;
+                }
+            }
+        }
     }
 
     function addItem(listId, cls, labelBase, min, max) {
@@ -175,56 +192,4 @@
 
     function renumber(listId, labelBase, hintText) {
         const rows = document.getElementById(listId).getElementsByClassName('row');
-        for (let i = 0; i < rows.length; i++) {
-            rows[i].querySelector('label').innerHTML = `${labelBase} ${i + 1} <span class="hint">${hintText}</span>`;
-        }
-    }
-
-    function calc() {
-        let bS = 0, bM = 0;
-        const tests = document.getElementsByClassName('t-score');
-        for (let t of tests) { bS += parseFloat(t.value) || 0; bM += 25; }
-        
-        let ex = 0;
-        const quizzes = document.getElementsByClassName('q-score');
-        for (let q of quizzes) ex += parseFloat(q.value) || 0;
-
-        ex += parseFloat(document.getElementById('oral').value) || 0;
-        ex += parseFloat(document.getElementById('lesson').value) || 0;
-        ex += parseFloat(document.getElementById('extra-lesson').value) || 0;
-        ex += parseFloat(document.getElementById('extra-home').value) || 0;
-        ex += parseFloat(document.getElementById('diag').value) || 0;
-        ex += parseFloat(document.getElementById('sem-exam').value) || 0;
-        ex += parseFloat(document.getElementById('ann-exam').value) || 0;
-        ex += parseFloat(document.getElementById('poprawy-pts').value) || 0;
-        ex += parseFloat(document.getElementById('np-penalty').value) || 0;
-
-        const lim = bM * 0.2;
-        const vEx = Math.min(ex, lim);
-        let currentTotal = bS + vEx;
-        let p = bM > 0 ? (currentTotal / bM) * 100 : 0;
-
-        let g = "-";
-        if (bM > 0) {
-            if (p >= 100) g = "6 (Celujący)";
-            else if (p >= 95) g = "5 (Bardzo dobry)";
-            else if (p >= 80) g = "4 (Dobry)";
-            else if (p >= 60) g = "3 (Dostateczny)";
-            else if (p >= 50) g = "2 (Dopuszczający)";
-            else g = "1 (Niedostateczny)";
-        }
-
-        document.getElementById('grade-label').innerText = g;
-        document.getElementById('perc-label').innerText = p.toFixed(1) + "%";
-        
-        // Zmiana: Wyświetlanie bez zbędnych zer po przecinku (36 zamiast 36.0)
-        document.getElementById('fraction-label').innerText = `Punkty: ${Number(currentTotal.toFixed(1))} / ${bM}`;
-        
-        const msg = document.getElementById('limit-msg');
-        if (bM === 0) msg.innerText = "Dodaj sprawdzian (bazę)";
-        else if (ex > lim) msg.innerText = `Osiągnięto limit bonusu (+${lim.toFixed(1)} pkt)`;
-        else msg.innerText = "Bonusy wliczone w wynik";
-    }
-</script>
-</body>
-</html>
+        for (let i = 0;

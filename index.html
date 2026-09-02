@@ -85,7 +85,7 @@
                 <li><strong>Sprawdziany:</strong> Tworzą bazę (25 pkt każdy), wpisz liczbę punktów jaką uzyskano za każdy sprawdzian.</li>
                 <li><strong>Dodatkowe:</strong> Kartkówki, aktywność itp. to punkty dodatkowe, niewliczane do puli w mianowniku.</li>
                 <li><strong>Limit 20%:</strong> Punkty dodatkowe mogą podnieść wynik o max 20% wartości bazy sprawdzianowej.</li>
-                <li><strong>Poprawy:</strong> Wpisz 2, 4, 6 lub 8 pkt za niewykorzystane poprawy lub 0 jeśli wykorzystano wszystkie poprawy.</li>
+                <li><strong>Poprawy:</strong> Wpisz od 0 do 4 pkt za niewykorzystane poprawy lub 0 jeśli wykorzystano wszystkie poprawy.</li>
                 <li><strong>NP:</strong> Każde nieprzygotowanie powyżej limitu to -1 pkt.</li>
             </ul>
             <div style="font-size: 0.83rem; color: #a90505; border-top: 1px solid #ccc; padding-top: 5px;">
@@ -156,7 +156,7 @@
         <section>
             <div class="sec-title">🏆 Poprawy i nieprzygotowania</div>
             <div class="row">
-                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 2, 4, 6 lub 8 pkt</span></label>
+                <label>Niewykorzystane poprawy <span class="hint">Wartości: 0, 1, 2, 3 lub 4 pkt</span></label>
                 <input type="number" id="poprawy-pts" onchange="vPop(this); calc()">
             </div>
             <div class="row">
@@ -191,9 +191,9 @@
     function vPop(el) {
         if (el.value !== "") {
             let val = parseInt(el.value);
-            if (val > 8) el.value = 8;
+            if (val > 4) el.value = 4;
             else if (val < 0) el.value = 0;
-            else el.value = Math.round(val / 2) * 2;
+            else el.value = Math.round(val);
         }
         calc();
     }
@@ -219,7 +219,6 @@
         }
     }
 
-    // Funkcja bezpiecznie pobierająca wartość z elementu po ID
     function gV(id) {
         const el = document.getElementById(id);
         return el ? (parseFloat(el.value) || 0) : 0;
@@ -237,7 +236,6 @@
         const quizzes = document.getElementsByClassName('q-score');
         for (let q of quizzes) ex += parseFloat(q.value) || 0;
 
-        // Tutaj poprawione przypisania do Twoich ID z sekcji HTML
         ex += gV('oral');
         ex += gV('lesson');
         ex += gV('extra-lesson');
@@ -249,7 +247,6 @@
         ex += gV('np-penalty');
 
         const lim = bM * 0.2;
-        // Punkty ujemne liczone są zawsze, dodatnie do limitu 20% bazy
         const vEx = ex > 0 ? Math.min(ex, lim) : ex;
         
         let currentTotal = bS + vEx;
